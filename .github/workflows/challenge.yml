@@ -3,6 +3,7 @@ name: Test CTF Integration Requirements
 on:
   push: # this runs automatically on push, I recommend turning off email notifs for failed runs :)
   workflow_dispatch: # allows you to manually trigger a run from web ui
+  workflow_call: # allows this to be called by another repo
 
 jobs:
   test-container:
