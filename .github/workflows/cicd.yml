@@ -9,5 +9,3 @@ jobs:
     # If this step fails, you do not have access to the hackpack-ctf2025 repo.
     # Message @kapravel to get access.
     uses: hackpack-ncsu/hackpack-ctf2025-public/.github/workflows/challenge.yml@main
-    with:
-      token: ${{ secrets.PAT }} # Make sure the PAT has repo read permission
