@@ -1,0 +1,40 @@
+services:
+  database:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    container_name: database
+    env_file: ./database/.env
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - database
+    ports:
+      - "3306:3306"
+    restart: always
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: app
+    depends_on: 
+      - database
+    env_file: ./app/.env
+    restart: always
+    networks:
+      - database
+      - external
+    ports:
+      - "80:80"
+
+networks:
+  database:
+  external:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "0.0.0.0"

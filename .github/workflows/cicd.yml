@@ -1,0 +1,26 @@
+name: Test CTF Integration Requirements
+
+on:
+  push: # this runs automatically on push, I recommend turning off email notifs for failed runs :)
+  workflow_dispatch: # allows you to manually trigger a run from web ui
+
+jobs:
+  test-container:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # If this step fails, you do not have access to the hackpack-ctf2025 repo.
+      # Message @kapravel to get access.
+      - name: Test repo access
+        uses: actions/checkout@v4
+        with:
+          repository: hackpack-ncsu/hackpack-ctf2025
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Attempts to run unit tests to validate your challenge.
+      # Be sure to read instructions on what is required to pass these checks!
+      - name: Run the challenge integration verification unit tests
+        uses: hackpack-ncsu/hackpack-ctf2025/.github/workflows/challenge.yml@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
