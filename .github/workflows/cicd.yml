@@ -6,21 +6,9 @@ on:
 
 jobs:
   test-container:
+    # If this step fails, you do not have access to the hackpack-ctf2025 repo.
+    # Message @kapravel to get access.
     runs-on: ubuntu-latest
-
-    steps:
-
-      # If this step fails, you do not have access to the hackpack-ctf2025 repo.
-      # Message @kapravel to get access.
-      - name: Test repo access
-        uses: actions/checkout@v4
-        with:
-          repository: hackpack-ncsu/hackpack-ctf2025
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      # Attempts to run unit tests to validate your challenge.
-      # Be sure to read instructions on what is required to pass these checks!
-      - name: Run the challenge integration verification unit tests
-        uses: hackpack-ncsu/hackpack-ctf2025/.github/workflows/challenge.yml@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+    uses: hackpack-ncsu/hackpack-ctf2025-public/.github/workflows/challenge.yml@main
+    with:
+      token: ${{ secrets.PAT }} # Make sure the PAT has repo read permission

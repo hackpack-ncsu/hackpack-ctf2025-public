@@ -1,0 +1,117 @@
+name: Test CTF Integration Requirements
+
+on:
+  push: # this runs automatically on push, I recommend turning off email notifs for failed runs :)
+  workflow_dispatch: # allows you to manually trigger a run from web ui
+
+jobs:
+  test-container:
+    runs-on: ubuntu-latest
+
+    steps:
+      # This action gets your source code from the repo, and puts it into the container.
+      # If you remove this, you will not be able to run the following steps (don't remove).
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # This command builds your docker environment.
+      # We require all challenges to be made with docker compose so we can 
+      # integrate them into the challenge infrastructure.
+      # 
+      # If this fails, double check that you are able to successfully run docker compose locally.
+      # Also, you can check the logs in the github runner to see why the build failed.
+      - name: Build Challenge 1 (docker compose)
+        run: |
+          cd challenges
+          cd $(jq -r '.[0].directory' test.conf)
+          docker compose up -d
+
+      # Here, we run your programmatic solution to your challenge.
+      # Feel free to use the provided example as inspiration!
+      #
+      # Use whatever format/langauge you like, but it must meet the following requirements
+      # - Must reproducably test the full exploit chain. (Ensuring it works)
+      #   - Ex: SQLi challenge, make a script that will make requests to your endpoint and end up with the flag
+      #   - See attached example for inspiration on how to do this.
+      # - Must echo the flag to STDOUT, this is how we know your challenge works.
+      #
+      # If your challenge solution can not be solved programmatically, speak to Dr. Kapravelos.
+      # There are some challenges (forensics, special tooling, etc) that will not work with this format,
+      # but short of a few exceptions, you should aim to have a functional solution script.
+      #
+      - name: Test Challenge 1 Solution
+        run: |
+          cd challenges
+          PROGRAM=$(jq -r '.[0].program' test.conf)
+          ARGS=$(jq -r '.[0].program_args | join(" ")' test.conf)
+          FLAG_SUBSTR="hackpackCTF{"
+          cd $(jq -r '.[0].directory' test.conf)
+          
+          # We expect the string: `hackpackCTF{...}` as the output
+          OUTPUT=$($PROGRAM $ARGS)
+          echo $OUTPUT
+          
+          OUTPUT=${OUTPUT:0:12} # extract first 12 chars
+          
+          # This is a basic check. We know you can trivially bypass this. Do not.
+          # If you come to us without a working PoC, we will consider your challenge incomplete.
+          
+          if [ "$OUTPUT" = "$FLAG_SUBSTR" ]; then
+              echo "PoC successful!"
+              exit 0
+          else
+              echo "PoC failed, check CI/CD logs."
+              exit 1
+          fi
+
+
+      # This command builds your docker environment.
+      # We require all challenges to be made with docker compose so we can 
+      # integrate them into the challenge infrastructure.
+      # 
+      # If this fails, double check that you are able to successfully run docker compose locally.
+      # Also, you can check the logs in the github runner to see why the build failed.
+      - name: Build Challenge 2 (docker compose)
+        run: |
+          cd challenges
+          cd $(jq -r '.[1].directory' test.conf)
+          docker compose up -d
+          
+      # Here, we run your programmatic solution to your challenge.
+      # Feel free to use the provided example as inspiration!
+      #
+      # Use whatever format/langauge you like, but it must meet the following requirements
+      # - Must reproducably test the full exploit chain. (Ensuring it works)
+      #   - Ex: SQLi challenge, make a script that will make requests to your endpoint and end up with the flag
+      #   - See attached example for inspiration on how to do this.
+      # - Must echo the flag to STDOUT, this is how we know your challenge works.
+      #
+      # If your challenge solution can not be solved programmatically, speak to Dr. Kapravelos.
+      # There are some challenges (forensics, special tooling, etc) that will not work with this format,
+      # but short of a few exceptions, you should aim to have a functional solution script.
+      #
+      - name: Test Challenge 2 Solution
+        run: |
+          cd challenges
+          PROGRAM=$(jq -r '.[1].program' test.conf)
+          ARGS=$(jq -r '.[1].program_args | join(" ")' test.conf)
+          FLAG_SUBSTR="hackpackCTF{"
+          cd $(jq -r '.[1].directory' test.conf)
+          
+          # We expect the string: `hackpackCTF{...}` as the output
+          OUTPUT=$($PROGRAM $ARGS)
+          echo $OUTPUT
+          
+          OUTPUT=${OUTPUT:0:12} # extract first 12 chars
+          
+          # This is a basic check. We know you can trivially bypass this. Do not.
+          # If you come to us without a working PoC, we will consider your challenge incomplete.
+          
+          if [ "$OUTPUT" = "$FLAG_SUBSTR" ]; then
+              echo "PoC successful!"
+              exit 0
+          else
+              echo "PoC failed, check CI/CD logs."
+              exit 1
+          fi
+
