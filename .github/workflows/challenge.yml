@@ -26,8 +26,6 @@ jobs:
       # If you remove this, you will not be able to run the following steps (don't remove).
       - name: Checkout code
         uses: actions/checkout@v4
-        run: |
-          cd challenges
 
       # This command builds your docker environment.
       # We require all challenges to be made with docker compose so we can 
@@ -37,6 +35,7 @@ jobs:
       # Also, you can check the logs in the github runner to see why the build failed.
       - name: Build Challenge 1 (docker compose)
         run: |
+          cd challenges
           cd $(jq -r '.[0].directory' test.conf)
           docker compose up -d
           
