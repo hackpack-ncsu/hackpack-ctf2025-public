@@ -1,10 +1,10 @@
 services:
   database:
     build:
-      context: ./database
+      context: ./src/database
       dockerfile: Dockerfile
     container_name: database
-    env_file: ./database/.env
+    env_file: ./src/database/.env
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       start_period: 10s
@@ -17,12 +17,12 @@ services:
 
   app:
     build:
-      context: ./app
+      context: ./src/app
       dockerfile: Dockerfile
     container_name: app
     depends_on: 
       - database
-    env_file: ./app/.env
+    env_file: ./src/app/.env
     restart: always
     networks:
       - database
