@@ -13,8 +13,6 @@ services:
       retries: 3
     networks:
       - database
-    ports:
-      - "3306:3306"
     restart: always
 
   app:
@@ -28,13 +26,8 @@ services:
     restart: always
     networks:
       - database
-      - external
     ports:
       - "80:80"
 
 networks:
   database:
-  external:
-    driver: bridge
-    driver_opts:
-      com.docker.network.bridge.host_binding_ipv4: "0.0.0.0"

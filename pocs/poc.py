@@ -49,7 +49,7 @@ def is_alive():
 
 if __name__ == "__main__":
 
-    time.sleep(120) # allow everything to fully load.
+    # time.sleep(120) # allow everything to fully load.
 
     is_alive() # check the server is alive
 

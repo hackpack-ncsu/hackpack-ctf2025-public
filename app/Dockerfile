@@ -8,6 +8,10 @@ RUN npm run build
 # Stage 2: Set up Python environment for Flask
 FROM python:3.9-slim
 WORKDIR /app
+
+RUN useradd -m ctf
+USER ctf
+
 COPY --from=build /app/build /app/frontend
 
 COPY app.py /app/app.py
@@ -16,3 +20,4 @@ RUN pip install --no-cache-dir Flask flask-cors pymysql
 
 # Run Flask server
 CMD ["python", "/app/app.py"]
+
