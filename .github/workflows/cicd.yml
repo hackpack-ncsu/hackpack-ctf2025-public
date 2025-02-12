@@ -8,4 +8,4 @@ jobs:
   test-container:
     # If this step fails, you do not have access to the hackpack-ctf2025 repo.
     # Message @kapravel to get access.
-    uses: hackpack-ncsu/hackpack-ctf2025-public/.github/workflows/challenge.yml@main
+    uses: hackpack-ncsu/hackpack-ctf2025-actions/.github/workflows/challenge.yml@main
